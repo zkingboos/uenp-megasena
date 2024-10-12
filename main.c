@@ -23,26 +23,20 @@ typedef struct {
     int draw[DRAW_SIZE];
 } Ticket;
 
-bool numberAlreadyExists(Game game, int number) {
-    for (int index = 0; index < game.quantity; ++index) {
-        if (game.numbers[index] == number) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void orderGameNumbers(Game *game) {
-    for (int i = 0; i < game->quantity - 1; i++) {
-        for (int j = 0; j < game->quantity - 1 - i; j++) {
-            if (game->numbers[j] > game->numbers[j + 1]) {
-                int temp = game->numbers[j];
-                game->numbers[j] = game->numbers[j + 1];
-                game->numbers[j + 1] = temp;
+void orderNumbers(int numbers[], int quantity) {
+    for (int i = 0; i < quantity - 1; i++) {
+        for (int j = 0; j < quantity - 1 - i; j++) {
+            if (numbers[j] > numbers[j + 1]) {
+                int temp = numbers[j];
+                numbers[j] = numbers[j + 1];
+                numbers[j + 1] = temp;
             }
         }
     }
+}
+
+void orderGameNumbers(Game *game) {
+    orderNumbers(game->numbers, game->quantity);
 }
 
 bool hasNumberMatch(int draw[], int currentNumber) {
