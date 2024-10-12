@@ -159,6 +159,8 @@ void generateRandomDraw(Ticket *ticket) {
         registeredNumbers[number] = true;
         ticket->draw[index] = number;
     }
+
+    orderNumbers(ticket->draw, DRAW_SIZE);
 }
 
 int main() {
