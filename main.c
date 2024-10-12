@@ -20,6 +20,7 @@ typedef struct {
 typedef struct {
     Game games[MAX_GAMES + MAX_RANDOM_GAMES];
     int gameCount;
+    int draw[DRAW_SIZE];
 } Ticket;
 
 bool numberAlreadyExists(Game game, int number) {
@@ -95,12 +96,14 @@ void generateNewRandomGame(Ticket *ticket) {
     } while (!createNewGame(ticket, newGame));
 }
 
-int countMatches(Game game, int draw[], int drawSize) {
+int countMatches(Ticket ticket, Game game) {
+    int *draw = ticket.draw;
+
     int matches = 0;
     int xIndex = 0;
     int yIndex = 0;
 
-    while (xIndex < game.quantity && yIndex < drawSize) {
+    while (xIndex < game.quantity && yIndex < DRAW_SIZE) {
         if (game.numbers[xIndex] == draw[yIndex]) {
             matches++;
             xIndex++;
@@ -142,9 +145,16 @@ Game getUserGame(int numberQuantity, int gameNumber) {
     return newUserGame;
 }
 
-void generateRandomDraw(int *draw, int drawSize) {
-    for (int index = 0; index < drawSize; ++index) {
-        draw[index] = rand() % 60 + 1;
+void generateRandomDraw(Ticket *ticket) {
+    bool registeredNumbers[60] = {};
+    for (int index = 0; index < DRAW_SIZE; ++index) {
+        int number;
+        do {
+            number = rand() % 60 + 1;
+        } while (registeredNumbers[number] == true);
+
+        registeredNumbers[number] = true;
+        ticket->draw[index] = number;
     }
 }
 
@@ -199,16 +209,15 @@ int main() {
         generateNewRandomGame(&ticket);
     }
 
-    int draw[DRAW_SIZE] = {};
     printf("\tGenerating draw...\n");
-    generateRandomDraw(draw, DRAW_SIZE);
+    generateRandomDraw(&ticket);
 
     printf("\tRegistered total of games: %d\n", ticket.gameCount);
 
     int totalMatches = 0;
     for (int i = 0; i < ticket.gameCount; ++i) {
         Game userGame = ticket.games[i];
-        int matches = countMatches(userGame, draw, DRAW_SIZE);
+        int matches = countMatches(ticket, userGame);
 
         if (userGame.random) {
             printf("\t\t[Game %d Random] You have %d matches. \n", i + 1, matches);
