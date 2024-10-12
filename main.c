@@ -255,6 +255,12 @@ int main() {
         totalMatches += matches;
     }
 
+    printf("\tDraw numbers: ");
+    for (int i = 0; i < DRAW_SIZE; ++i) {
+        printf("%d ", ticket.draw[i]);
+    }
+    printf("\n");
+
     printf("\tTotal matches: %d\n", totalMatches);
     if (totalMatches >= DRAW_SIZE) {
         printf("\t\tCongratulations! You won the big prize!\n");
