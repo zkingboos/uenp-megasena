@@ -82,9 +82,16 @@ void generateNewRandomGame(Ticket *ticket) {
             .random = true
     };
 
+    bool registeredNumbers[60] = {};
     do {
         for (int index = 0; index < MIN_NUMBERS; ++index) {
-            newGame.numbers[index] = rand() % 60 + 1;
+            int number;
+            do {
+                number = rand() % 60 + 1;
+            } while (registeredNumbers[number] == true);
+
+            registeredNumbers[number] = true;
+            newGame.numbers[index] = number;
         }
         orderGameNumbers(&newGame);
     } while (!createNewGame(ticket, newGame));
@@ -116,6 +123,7 @@ Game getUserGame(int numberQuantity, int gameNumber) {
     Game newUserGame = {.quantity = numberQuantity, .random = false};
 
     int index = 0;
+    bool registeredNumbers[60] = {};
     do {
         int number;
         printf("Game(%d) #%d: Enter %d numbers for you game (1-60): ", gameNumber, index + 1, numberQuantity);
@@ -126,11 +134,12 @@ Game getUserGame(int numberQuantity, int gameNumber) {
             continue;
         }
 
-        if (numberAlreadyExists(newUserGame, number)) {
+        if (registeredNumbers[number] == true) {
             printf("This number was used before in the same game, please specify a new number.\n");
             continue;
         }
 
+        registeredNumbers[number] = true;
         newUserGame.numbers[index] = number;
         index++;
     } while (index < numberQuantity);
