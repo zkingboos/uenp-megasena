@@ -8,6 +8,8 @@
 #define MAX_RANDOM_GAMES 7
 #define MIN_NUMBERS 6
 #define DRAW_SIZE 6
+#define COLOR_GREEN "\033[0;32m"
+#define COLOR_RESET "\033[0m"
 
 typedef struct {
     int numbers[MAX_NUMBERS];
@@ -40,6 +42,16 @@ void orderGameNumbers(Game *game) {
             }
         }
     }
+}
+
+bool hasNumberMatch(int draw[], int currentNumber) {
+    for (int i = 0; i < DRAW_SIZE; ++i) {
+        if (draw[i] == currentNumber) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool areGamesEqual(Game first, Game second) {
@@ -199,9 +211,31 @@ int main() {
         int matches = countMatches(userGame, draw, DRAW_SIZE);
 
         if (userGame.random) {
-            printf("\t\t[Game %d Random] You have %d matches.\n", i + 1, matches);
+            printf("\t\t[Game %d Random] You have %d matches. \n", i + 1, matches);
+            printf("\t\t\tNumbers: ");
+            for (int j = 0; j < userGame.quantity; ++j) {
+                int number = userGame.numbers[j];
+                if (hasNumberMatch(ticket.draw, number)) {
+                    printf(COLOR_GREEN "%d " COLOR_RESET, number);
+                } else {
+                    printf("%d ", number);
+                }
+
+            }
+            printf("\n");
+
         } else {
             printf("\t\t[Game %d] You have %d matches.\n", i + 1, matches);
+            printf("\t\t\tNumbers: ");
+            for (int j = 0; j < userGame.quantity; ++j) {
+                int number = userGame.numbers[j];
+                if (hasNumberMatch(ticket.draw, number)) {
+                    printf(COLOR_GREEN "%d " COLOR_RESET, number);
+                } else {
+                    printf("%d ", number);
+                }
+            }
+            printf("\n");
         }
 
         totalMatches += matches;
