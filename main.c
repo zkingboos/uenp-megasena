@@ -224,7 +224,13 @@ int main() {
 
     printf("\tRegistered total of games: %d\n", ticket.gameCount);
 
-    int totalMatches = 0;
+    printf("\tDraw numbers: ");
+    for (int i = 0; i < DRAW_SIZE; ++i) {
+        printf("%d ", ticket.draw[i]);
+    }
+    printf("\n");
+
+
     for (int i = 0; i < ticket.gameCount; ++i) {
         Game userGame = ticket.games[i];
         int matches = countMatches(ticket, userGame);
@@ -257,22 +263,15 @@ int main() {
             printf("\n");
         }
 
-        totalMatches += matches;
-    }
+        if (matches >= DRAW_SIZE) {
+            printf("\t\t\tCongratulations! You won the big prize!\n");
+        } else if (matches >= 4) {
+            printf("\t\t\tCongratulations! You won a prize!\n");
+        } else {
+            printf("\t\t\tSorry, you didn't win anything.\n");
+        }
 
-    printf("\tDraw numbers: ");
-    for (int i = 0; i < DRAW_SIZE; ++i) {
-        printf("%d ", ticket.draw[i]);
-    }
-    printf("\n");
-
-    printf("\tTotal matches: %d\n", totalMatches);
-    if (totalMatches >= DRAW_SIZE) {
-        printf("\t\tCongratulations! You won the big prize!\n");
-    } else if (totalMatches >= 4) {
-        printf("\t\tCongratulations! You won a prize!\n");
-    } else {
-        printf("\t\tSorry, you didn't win anything.\n");
+        printf("\n");
     }
     return 0;
 }
