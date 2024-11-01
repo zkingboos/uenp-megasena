@@ -10,6 +10,7 @@
 #define DRAW_SIZE 6
 #define COLOR_GREEN "\033[0;32m"
 #define COLOR_RESET "\033[0m"
+#define MAX_VALUE 60
 
 typedef struct {
     int numbers[MAX_NUMBERS];
@@ -24,13 +25,17 @@ typedef struct {
 } Ticket;
 
 void orderNumbers(int numbers[], int quantity) {
-    for (int i = 0; i < quantity - 1; i++) {
-        for (int j = 0; j < quantity - 1 - i; j++) {
-            if (numbers[j] > numbers[j + 1]) {
-                int temp = numbers[j];
-                numbers[j] = numbers[j + 1];
-                numbers[j + 1] = temp;
-            }
+    int count[MAX_VALUE + 1] = {0};
+
+    for (int i = 0; i < quantity; i++) {
+        count[numbers[i]]++;
+    }
+
+    int index = 0;
+    for (int i = 1; i <= MAX_VALUE; i++) {
+        while (count[i] > 0) {
+            numbers[index++] = i;
+            count[i]--;
         }
     }
 }
